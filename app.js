@@ -42,7 +42,17 @@ const tasks = [
 
     // console.log(objOfTasks);
 
+    // Elemnts UI
+    const listContainer = document.querySelector(
+        '.tasks-list-section .list-group',
+    );
+    const form = document.forms['addTask'];
+    const inputTitle = form.elements['title'];
+    const inputBody = form.elements['body'];
+
+    // Events
     renderAllTasks(objOfTasks);
+    form.addEventListener('submit', onFormSubmitHandler);
 
     function renderAllTasks(tasksList) {
         if (!tasksList) {
@@ -78,5 +88,37 @@ const tasks = [
             'ml-auto',
             'delete-btn'
         );
+    }
+
+    function onFormSubmitHandler(e) {
+        e.preventDefault();
+        const titleValue = inputTitle.value;
+        const bodyValue = inputBody.value;
+        // console.log(`titleValue ${titleValue}, bodyValue ${bodyValue}`);
+
+        if (!titleValue || !bodyValue) {
+            alert("Input please Title and Body");
+            return;
+        }
+
+        const task = createNewTask(titleValue, bodyValue);
+        const listItem = listItemTemplate(task);
+        // console.log(listItem);
+        listContainer.insertAdjacentElement('afterbegin', listItem);
+        form.reset();
+    }
+
+    function createNewTask(title, body) {
+        const newTask = {
+            title,
+            body,
+            completed: false,
+            _id: `task-${Math.random()}`
+        };
+
+        // console.log(`newTask ${newTask}`);
+        objOfTasks[newTask._id] = newTask;
+
+        return { ...newTask };
     }
 }) (tasks);
